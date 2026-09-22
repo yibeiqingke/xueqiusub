@@ -1,0 +1,37 @@
+# 自定义 rsshub 镜像：内置 patchright (Playwright反检测分支) 浏览器
+# 解决雪球等路由需要无头 Chromium 的问题，避免容器重建后浏览器丢失
+FROM diygod/rsshub:latest
+
+# 用国内源加速
+ENV PLAYWRIGHT_DOWNLOAD_HOST=https://cdn.npmmirror.com/binaries/playwright \
+    npm_config_registry=https://registry.npmmirror.com
+
+USER root
+
+# 1) 换 apt 国内源并安装 Chromium 运行所需的系统库
+RUN sed -i 's|http://deb.debian.org|http://mirrors.aliyun.com|g; s|http://security.debian.org|http://mirrors.aliyun.com/debian-security|g' /etc/apt/sources.list.d/debian.sources \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
+        libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 \
+        libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 \
+        libgbm1 libpango-1.0-0 libcairo2 libasound2 libatspi2.0-0 \
+        libxshmfence1 fonts-liberation \
+    && rm -rf /var/lib/apt/lists/*
+
+# 2) 安装 Chromium 浏览器
+#    rsshub 内部用的是 patchright(patchright-core 1.61.1)，其 browsers.json 要求的
+#    revision 为 1228。playwright 1.61.1 安装的浏览器 revision 恰好也是 1228，
+#    二进制完全一致，因此用 playwright 安装即可被 patchright 直接识别。
+#    注意：基础镜像运行时用户为 node(uid 1000)，HOME=/home/node。
+#    浏览器默认装到 /root/.cache 而 node 无权限读取，故这里显式将浏览器装到
+#    node 用户的缓存目录并在最后 chown 给 node，确保运行时能找到浏览器。
+ENV PLAYWRIGHT_BROWSERS_PATH=/home/node/.cache/ms-playwright
+RUN npm config set registry https://registry.npmmirror.com \
+    && npx -y playwright@1.61.1 install chromium chromium-headless-shell \
+    && npm config delete registry \
+    && chown -R node:node /home/node/.cache
+
+# 恢复镜像原始用户与入口
+USER node
+ENTRYPOINT ["dumb-init", "--"]
+CMD ["npm", "run", "start"]

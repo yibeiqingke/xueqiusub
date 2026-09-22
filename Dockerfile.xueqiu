@@ -1,0 +1,8 @@
+FROM xueqiusub-appbase:stable
+
+# 安装与更新核心依赖：OpenAI SDK 与 自动化测试套件
+RUN pip install --no-cache-dir -i https://mirrors.aliyun.com/pypi/simple/ openai==2.54.0 pytest
+
+# 完整运行时代码
+COPY app_source/app /app/app
+COPY app_source/tests /app/tests

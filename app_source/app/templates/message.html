@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} · {{ app_name }}{% endblock %}
+{% block content %}
+<div class="auth-wrapper">
+  <section class="auth-panel" style="text-align: center;">
+    <div class="auth-panel-header">
+      <div class="auth-logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+      </div>
+      <h1>{{ title }}</h1>
+      <p style="margin-top: 12px; font-size: 15px; color: var(--text-secondary);">{{ message }}</p>
+    </div>
+    <div style="margin-top: 24px;">
+      <a class="button" href="/login" style="width: 100%;">
+        <span>返回登录</span>
+      </a>
+    </div>
+  </section>
+</div>
+{% endblock %}

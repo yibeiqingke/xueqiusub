@@ -1,0 +1,192 @@
+:root {
+  --app-bg: #f8fafc;
+  --app-card-bg: #ffffff;
+  --app-header-bg: #ffffff;
+  --app-border: #e2e8f0;
+  --app-text: #0f172a;
+  --app-text-muted: #64748b;
+  --app-sub-ctrl-bg: #f8fafc;
+}
+
+html.dark {
+  --app-bg: #0b1120;
+  --app-card-bg: #1e293b;
+  --app-header-bg: #131d31;
+  --app-border: #334155;
+  --app-text: #f1f5f9;
+  --app-text-muted: #94a3b8;
+  --app-sub-ctrl-bg: #0f172a;
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--app-bg);
+  color: var(--app-text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* iOS Safari font zoom fix */
+@media screen and (max-width: 768px) {
+  input, select, textarea, .el-input__inner, .el-textarea__inner {
+    font-size: 16px !important;
+  }
+}
+
+/* Dark mode overrides for Element Plus common cards and layout containers */
+html.dark .layout-container {
+  background-color: var(--app-bg) !important;
+}
+
+html.dark .header {
+  background-color: var(--app-header-bg) !important;
+  border-bottom-color: var(--app-border) !important;
+}
+
+html.dark .mobile-bottom-nav {
+  background-color: var(--app-header-bg) !important;
+  border-top-color: var(--app-border) !important;
+}
+
+html.dark .tab-item {
+  color: #94a3b8;
+}
+
+html.dark .tab-item:active {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+html.dark .tab-item.active {
+  color: #38bdf8 !important;
+}
+
+html.dark .user-badge {
+  background: #334155 !important;
+  color: #cbd5e1 !important;
+}
+
+html.dark .logo-title {
+  color: #f8fafc !important;
+}
+
+html.dark .page-title {
+  color: #f8fafc !important;
+}
+
+html.dark .page-desc {
+  color: #94a3b8 !important;
+}
+
+html.dark .stat-card {
+  background-color: var(--app-card-bg) !important;
+  border-color: var(--app-border) !important;
+}
+
+html.dark .stat-label {
+  color: #94a3b8 !important;
+}
+
+html.dark .table-card {
+  background-color: var(--app-card-bg) !important;
+  border-color: var(--app-border) !important;
+}
+
+html.dark .sub-mobile-card {
+  background-color: var(--app-card-bg) !important;
+  border-color: var(--app-border) !important;
+}
+
+html.dark .sub-name {
+  color: #f8fafc !important;
+}
+
+html.dark .sub-card-controls {
+  background-color: var(--app-sub-ctrl-bg) !important;
+}
+
+html.dark .sub-ctrl-label {
+  color: #94a3b8 !important;
+}
+
+html.dark .sub-card-actions {
+  border-top-color: var(--app-border) !important;
+}
+
+html.dark .feed-card {
+  background-color: var(--app-card-bg) !important;
+  border-color: var(--app-border) !important;
+}
+
+html.dark .feed-title {
+  color: #f1f5f9 !important;
+}
+
+html.dark .feed-content {
+  color: #cbd5e1 !important;
+}
+
+html.dark .author-name {
+  color: #f8fafc !important;
+}
+
+html.dark .messages-card {
+  background-color: var(--app-card-bg) !important;
+  border-color: var(--app-border) !important;
+}
+
+html.dark .empty-chat h3 {
+  color: #f8fafc !important;
+}
+
+html.dark .assistant-row .msg-bubble {
+  background-color: #0f172a !important;
+  border-color: var(--app-border) !important;
+  color: #e2e8f0 !important;
+}
+
+html.dark .settings-card {
+  background-color: var(--app-card-bg) !important;
+  border-color: var(--app-border) !important;
+}
+
+html.dark .card-header-title h3 {
+  color: #f8fafc !important;
+}
+
+html.dark .section-desc {
+  color: #94a3b8 !important;
+}
+
+html.dark .preset-box {
+  background-color: var(--app-sub-ctrl-bg) !important;
+  border-color: var(--app-border) !important;
+}
+
+html.dark .preset-label {
+  color: #cbd5e1 !important;
+}
+
+html.dark .tabs-card {
+  background-color: var(--app-card-bg) !important;
+  border-color: var(--app-border) !important;
+}
+
+html.dark .guide-card {
+  background-color: var(--app-card-bg) !important;
+  border-color: var(--app-border) !important;
+}
+
+html.dark .guide-item h4 {
+  color: #f8fafc !important;
+}
+
+html.dark .guide-body {
+  color: #cbd5e1 !important;
+}
+
+html.dark code {
+  background: #334155 !important;
+  color: #38bdf8 !important;
+}

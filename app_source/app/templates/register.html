@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}注册新账号 · {{ app_name }}{% endblock %}
+{% block content %}
+<div class="auth-wrapper">
+  <section class="auth-panel" style="max-width: 460px;">
+    <div class="auth-panel-header">
+      <div class="auth-logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <line x1="20" y1="8" x2="20" y2="14"></line>
+          <line x1="23" y1="11" x2="17" y2="11"></line>
+        </svg>
+      </div>
+      <h1>创建新账号</h1>
+      <p>开启全网财经大V动态监控与 AI 智能推送服务</p>
+    </div>
+
+    <form method="post" action="/register" class="stack">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <label>
+        <span>用户名</span>
+        <input type="text" name="username" autocomplete="username" minlength="3" maxlength="32" placeholder="3-32位用户名" required autofocus>
+      </label>
+      <label>
+        <span>设置密码</span>
+        <input type="password" name="password" autocomplete="new-password" minlength="6" placeholder="至少 6 位字符" required>
+      </label>
+      <label>
+        <span>确认密码</span>
+        <input type="password" name="confirm" autocomplete="new-password" minlength="6" placeholder="请再次输入密码" required>
+      </label>
+      <label>
+        <span>接收通知邮箱（选填）</span>
+        <input type="email" name="email" autocomplete="email" placeholder="用于接收动态推送邮件">
+      </label>
+      <label>
+        <span>验证问答：我们的微信群名叫什么？</span>
+        <input type="text" name="answer" placeholder="请输入群名称答案" required autocomplete="off">
+      </label>
+      <button type="submit" style="width: 100%; height: 44px; font-size: 15px; margin-top: 6px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><polyline points="16 11 18 13 22 9"></polyline></svg>
+        <span>完成注册</span>
+      </button>
+    </form>
+
+    <div class="alt-link">
+      <span>已有账号？</span>
+      <a href="/login">直接登录</a>
+    </div>
+  </section>
+</div>
+{% endblock %}

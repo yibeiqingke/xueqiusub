@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+{% block title %}大V精选发现广场 · {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="discover-container" style="max-width: 1200px; margin: 0 auto; padding: 20px 16px 60px;">
+
+  <!-- 顶部 Banner -->
+  <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0369a1 100%); border-radius: 16px; padding: 32px 28px; color: #fff; margin-bottom: 24px; box-shadow: 0 10px 25px -5px rgba(15,23,42,0.15); position: relative; overflow: hidden;">
+    <div style="position: absolute; right: -20px; top: -20px; font-size: 140px; opacity: 0.06; pointer-events: none;">🧭</div>
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+      <span style="font-size: 22px;">🌟</span>
+      <h1 style="font-size: 22px; font-weight: 700; margin: 0; letter-spacing: 0.5px;">大V精选与信源发现广场</h1>
+    </div>
+    <p style="font-size: 14px; color: #cbd5e1; margin: 0; max-width: 680px; line-height: 1.6;">
+      严选涵盖价值投资、宏观经济学、周期量化、7×24 秒级官方电报及可转债套利等优质信源。点击「一键关注」即可秒级纳入实时监控与 AI 投研雷达，无需手动寻找配置 UID。
+    </p>
+  </div>
+
+  <!-- 分类筛选导航 Tabs -->
+  <div class="category-tabs" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px;">
+    <button class="cat-btn active" data-cat="all" onclick="filterCategory('all', this)" style="padding: 8px 18px; border-radius: 20px; font-size: 13.5px; font-weight: 600; cursor: pointer; border: 1px solid #0284c7; background: #0284c7; color: #fff; transition: all 0.2s;">
+      全部推荐
+    </button>
+    <button class="cat-btn" data-cat="value" onclick="filterCategory('value', this)" style="padding: 8px 18px; border-radius: 20px; font-size: 13.5px; font-weight: 600; cursor: pointer; border: 1px solid #e2e8f0; background: #fff; color: #475569; transition: all 0.2s;">
+      💎 价值投资
+    </button>
+    <button class="cat-btn" data-cat="macro" onclick="filterCategory('macro', this)" style="padding: 8px 18px; border-radius: 20px; font-size: 13.5px; font-weight: 600; cursor: pointer; border: 1px solid #e2e8f0; background: #fff; color: #475569; transition: all 0.2s;">
+      🌐 宏观策略
+    </button>
+    <button class="cat-btn" data-cat="cycle" onclick="filterCategory('cycle', this)" style="padding: 8px 18px; border-radius: 20px; font-size: 13.5px; font-weight: 600; cursor: pointer; border: 1px solid #e2e8f0; background: #fff; color: #475569; transition: all 0.2s;">
+      🎯 周期实战
+    </button>
+    <button class="cat-btn" data-cat="news" onclick="filterCategory('news', this)" style="padding: 8px 18px; border-radius: 20px; font-size: 13.5px; font-weight: 600; cursor: pointer; border: 1px solid #e2e8f0; background: #fff; color: #475569; transition: all 0.2s;">
+      ⚡ 7×24 快讯
+    </button>
+    <button class="cat-btn" data-cat="arbitrage" onclick="filterCategory('arbitrage', this)" style="padding: 8px 18px; border-radius: 20px; font-size: 13.5px; font-weight: 600; cursor: pointer; border: 1px solid #e2e8f0; background: #fff; color: #475569; transition: all 0.2s;">
+      🛡️ 套利与转债
+    </button>
+  </div>
+
+  <!-- 信源卡片网格 -->
+  <div class="sources-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 18px;">
+    {% for s in featured_sources %}
+    <div class="source-card" data-category="{{ s.category }}" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 22px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 2px 6px rgba(0,0,0,0.03); transition: all 0.25s ease; position: relative;">
+      
+      <div>
+        <!-- 头部：平台徽标与分类 -->
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+          <span style="font-size: 11.5px; font-weight: 700; color: #ffffff; background: {{ s.badge_color }}; padding: 2px 8px; border-radius: 6px; letter-spacing: 0.3px;">
+            {{ s.platform_name }}
+          </span>
+          <span style="font-size: 11.5px; font-weight: 600; color: #64748b; background: #f1f5f9; padding: 2px 8px; border-radius: 12px;">
+            {{ s.category_name }}
+          </span>
+        </div>
+
+        <!-- 标题与定位 -->
+        <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0 0 6px;">{{ s.name }}</h3>
+        <div style="font-size: 12px; font-weight: 600; color: #0284c7; margin-bottom: 10px; line-height: 1.4;">
+          {{ s.tag }}
+        </div>
+
+        <!-- 核心逻辑描述 -->
+        <p style="font-size: 13px; color: #475569; line-height: 1.6; margin: 0 0 16px;">
+          {{ s.desc }}
+        </p>
+      </div>
+
+      <!-- 底部操作按钮 -->
+      <div style="border-top: 1px solid #f1f5f9; padding-top: 14px; display: flex; align-items: center; justify-content: space-between;">
+        <span style="font-size: 11.5px; color: #94a3b8;">
+          ID: {{ s.xueqiu_user_id }}
+        </span>
+
+        {% if s.is_subscribed %}
+        <button disabled style="padding: 7px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; border: 1px solid #bbf7d0; background: #f0fdf4; color: #16a34a; cursor: default; display: flex; align-items: center; gap: 4px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          监控中
+        </button>
+        {% else %}
+        <button onclick="subscribeSource(this, '{{ s.platform }}', '{{ s.xueqiu_user_id }}', '{{ s.name }}')" class="btn-sub-instant" style="padding: 7px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; border: none; background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%); color: #ffffff; cursor: pointer; box-shadow: 0 2px 6px rgba(37,99,235,0.25); transition: all 0.2s;">
+          ＋ 一键关注
+        </button>
+        {% endif %}
+      </div>
+
+    </div>
+    {% endfor %}
+  </div>
+
+</div>
+
+<!-- 浮动通知 Toast -->
+<div id="discover-toast" style="position: fixed; bottom: 30px; right: 30px; background: #0f172a; color: #fff; padding: 12px 20px; border-radius: 10px; font-size: 13.5px; font-weight: 600; display: none; z-index: 9999; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: fadeIn 0.3s ease;"></div>
+
+<script>
+function filterCategory(cat, btn) {
+  document.querySelectorAll('.cat-btn').forEach(b => {
+    b.style.background = '#fff';
+    b.style.color = '#475569';
+    b.style.borderColor = '#e2e8f0';
+    b.classList.remove('active');
+  });
+  btn.style.background = '#0284c7';
+  btn.style.color = '#fff';
+  btn.style.borderColor = '#0284c7';
+  btn.classList.add('active');
+
+  const cards = document.querySelectorAll('.source-card');
+  cards.forEach(card => {
+    if (cat === 'all' || card.getAttribute('data-category') === cat) {
+      card.style.display = 'flex';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
+function showToast(msg, isSuccess = true) {
+  const t = document.getElementById('discover-toast');
+  t.innerHTML = (isSuccess ? '✅ ' : '⚠️ ') + msg;
+  t.style.display = 'block';
+  setTimeout(() => { t.style.display = 'none'; }, 3000);
+}
+
+async function subscribeSource(btn, platform, xueqiuUserId, displayName) {
+  btn.disabled = true;
+  const originalText = btn.innerHTML;
+  btn.innerHTML = '正在关注...';
+  
+  try {
+    const resp = await fetch('/api/discover/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        platform: platform,
+        xueqiu_user_id: xueqiuUserId,
+        display_name: displayName
+      })
+    });
+    const data = await resp.json();
+    if (data.ok) {
+      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 3px;"><polyline points="20 6 9 17 4 12"></polyline></svg>监控中';
+      btn.style.background = '#f0fdf4';
+      btn.style.color = '#16a34a';
+      btn.style.border = '1px solid #bbf7d0';
+      btn.style.boxShadow = 'none';
+      btn.style.cursor = 'default';
+      showToast(data.message || '关注成功！');
+    } else {
+      btn.disabled = false;
+      btn.innerHTML = originalText;
+      showToast(data.detail || '关注失败', false);
+    }
+  } catch (err) {
+    btn.disabled = false;
+    btn.innerHTML = originalText;
+    showToast('网络错误，请稍后再试', false);
+  }
+}
+</script>
+
+<style>
+.source-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px -5px rgba(0,0,0,0.08) !important;
+  border-color: #cbd5e1 !important;
+}
+.btn-sub-instant:hover {
+  opacity: 0.92;
+  transform: scale(1.02);
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+{% endblock %}

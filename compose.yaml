@@ -1,0 +1,172 @@
+services:
+  rsshub:
+    # 抓取栈已冻结：docker compose build 会重新解析 diygod/rsshub:latest，基础镜像里的
+    # patchright 版本一变，Dockerfile.rsshub 钉死的 playwright 浏览器 revision 就错位（雪球路由 503）。
+    # 维护时显式执行：docker build -f Dockerfile.rsshub -t xueqiusub-rsshub:pinned-<日期> .
+    # 在新容器里验证 /xueqiu/user 返回 200 后，再改下面的 image: 并 up -d rsshub。
+    build:
+      context: .
+      dockerfile: Dockerfile.rsshub
+    container_name: xueqiusub-rsshub
+    deploy:
+      resources:
+        limits:
+          memory: 640M
+    environment:
+      CACHE_EXPIRE: '1800'
+      CACHE_CONTENT_EXPIRE: '86400'
+      MEMORY_MAX: '384'
+      NODE_ENV: production
+      NODE_OPTIONS: --max-old-space-size=384
+      PORT: '1200'
+      TZ: Asia/Shanghai
+    image: xueqiusub-rsshub:local
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    ports:
+    - 1200:1200
+    restart: unless-stopped
+    shm_size: 256mb
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.xueqiu
+    command:
+    - uvicorn
+    - app.main:app
+    - --host
+    - 0.0.0.0
+    - --port
+    - '8100'
+    container_name: xueqiusub-web
+    depends_on:
+    - rsshub
+    - worker
+    environment:
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      APP_NAME: ${APP_NAME}
+      APP_TIMEZONE: ${APP_TIMEZONE}
+      TZ: ${APP_TIMEZONE:-Asia/Shanghai}
+      BASE_URL: ${BASE_URL}
+      DATABASE_URL: sqlite:///./data/xueqiu.db
+      DELIVERY_MAX_ATTEMPTS: ${DELIVERY_MAX_ATTEMPTS}
+      DIGEST_HOUR: ${DIGEST_HOUR}
+      RETRY_BASE_SECONDS: ${RETRY_BASE_SECONDS}
+      HTTP_TIMEOUT_SECONDS: ${HTTP_TIMEOUT_SECONDS}
+      FETCH_LIMIT: ${FETCH_LIMIT:-50}
+      FETCH_MAX_RESPONSE_BYTES: ${FETCH_MAX_RESPONSE_BYTES:-5242880}
+      FETCH_MAX_ENTRIES: ${FETCH_MAX_ENTRIES:-200}
+      MAX_NEW_ITEMS_PER_FETCH: ${MAX_NEW_ITEMS_PER_FETCH:-100}
+      MAX_CONSECUTIVE_FETCH_ERRORS: ${MAX_CONSECUTIVE_FETCH_ERRORS:-5}
+      FETCH_ERROR_BACKOFF_SECONDS: ${FETCH_ERROR_BACKOFF_SECONDS:-1800}
+      FETCH_ERROR_BACKOFF_MAX_SECONDS: ${FETCH_ERROR_BACKOFF_MAX_SECONDS:-21600}
+      IMMEDIATE_MERGE_PER_USER: ${IMMEDIATE_MERGE_PER_USER:-true}
+      IMMEDIATE_SEND_INTERVAL_SECONDS: ${IMMEDIATE_SEND_INTERVAL_SECONDS:-0}
+      LLM_API_BASE: ${LLM_API_BASE}
+      LLM_API_KEY: ${LLM_API_KEY}
+      LLM_ENABLED: ${LLM_ENABLED}
+      LLM_MODEL: ${LLM_MODEL}
+      POLL_INTERVAL_SECONDS: ${POLL_INTERVAL_SECONDS}
+      RSSHUB_BASE_URL: ${RSSHUB_BASE_URL}
+      RSSHUB_XUEQIU_PATH: ${RSSHUB_XUEQIU_PATH}
+      SECRET_KEY: ${SECRET_KEY}
+      SMTP_FROM: ${SMTP_FROM}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_SSL: ${SMTP_SSL}
+      SMTP_STARTTLS: ${SMTP_STARTTLS}
+      SMTP_USERNAME: ${SMTP_USERNAME}
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8100/health',
+        timeout=3)"
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    image: xueqiusub-web:local
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    ports:
+    - 8100:8100
+    restart: unless-stopped
+    volumes:
+    - app-data:/app/data
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.xueqiu
+    command:
+    - python
+    - -m
+    - app.worker
+    container_name: xueqiusub-worker
+    depends_on:
+    - rsshub
+    environment:
+      APP_NAME: ${APP_NAME}
+      APP_TIMEZONE: ${APP_TIMEZONE}
+      TZ: ${APP_TIMEZONE:-Asia/Shanghai}
+      BASE_URL: ${BASE_URL}
+      DATABASE_URL: sqlite:///./data/xueqiu.db
+      DELIVERY_MAX_ATTEMPTS: ${DELIVERY_MAX_ATTEMPTS}
+      DIGEST_HOUR: ${DIGEST_HOUR}
+      RETRY_BASE_SECONDS: ${RETRY_BASE_SECONDS}
+      HTTP_TIMEOUT_SECONDS: ${HTTP_TIMEOUT_SECONDS}
+      FETCH_LIMIT: ${FETCH_LIMIT:-50}
+      FETCH_MAX_RESPONSE_BYTES: ${FETCH_MAX_RESPONSE_BYTES:-5242880}
+      FETCH_MAX_ENTRIES: ${FETCH_MAX_ENTRIES:-200}
+      MAX_NEW_ITEMS_PER_FETCH: ${MAX_NEW_ITEMS_PER_FETCH:-100}
+      MAX_CONSECUTIVE_FETCH_ERRORS: ${MAX_CONSECUTIVE_FETCH_ERRORS:-5}
+      FETCH_ERROR_BACKOFF_SECONDS: ${FETCH_ERROR_BACKOFF_SECONDS:-1800}
+      FETCH_ERROR_BACKOFF_MAX_SECONDS: ${FETCH_ERROR_BACKOFF_MAX_SECONDS:-21600}
+      IMMEDIATE_MERGE_PER_USER: ${IMMEDIATE_MERGE_PER_USER:-true}
+      IMMEDIATE_SEND_INTERVAL_SECONDS: ${IMMEDIATE_SEND_INTERVAL_SECONDS:-0}
+      FETCH_ACCOUNT_GAP_SECONDS: ${FETCH_ACCOUNT_GAP_SECONDS:-10}
+      FEED_ITEM_RETENTION_DAYS: ${FEED_ITEM_RETENTION_DAYS:-90}
+      DELIVERY_RETENTION_DAYS: ${DELIVERY_RETENTION_DAYS:-7}
+      PURGE_EVERY_CYCLES: ${PURGE_EVERY_CYCLES:-144}
+      LLM_API_BASE: ${LLM_API_BASE}
+      LLM_API_KEY: ${LLM_API_KEY}
+      LLM_ENABLED: ${LLM_ENABLED}
+      LLM_MODEL: ${LLM_MODEL}
+      POLL_INTERVAL_SECONDS: ${POLL_INTERVAL_SECONDS}
+      RSSHUB_BASE_URL: ${RSSHUB_BASE_URL}
+      RSSHUB_XUEQIU_PATH: ${RSSHUB_XUEQIU_PATH}
+      SECRET_KEY: ${SECRET_KEY}
+      SMTP_FROM: ${SMTP_FROM}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_SSL: ${SMTP_SSL}
+      SMTP_STARTTLS: ${SMTP_STARTTLS}
+      SMTP_USERNAME: ${SMTP_USERNAME}
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - python -c "import os,time,sys; p='/app/data/.worker_heartbeat'; s=int(os.environ.get('POLL_INTERVAL_SECONDS','600'))*3+120;
+        sys.exit(0 if os.path.exists(p) and time.time()-os.path.getmtime(p) < s else 1)"
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 300s
+    image: xueqiusub-worker:local
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: unless-stopped
+    volumes:
+    - app-data:/app/data
+volumes:
+  app-data: null

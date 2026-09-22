@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+{% block title %}运行设置 · {{ app_name }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div class="page-title-group">
+    <h1>
+      <div class="header-icon-badge">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+      </div>
+      <span>系统运行与定时设置</span>
+    </h1>
+    <p>动态调整每日邮件汇总触发时段与系统时区（配置即时生效，无需重启）。</p>
+  </div>
+  <div>
+    <a class="button secondary" href="/admin">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"></path><polyline points="12 19 5 12 12 5"></polyline></svg>
+      <span>返回后台</span>
+    </a>
+  </div>
+</div>
+
+<section class="panel">
+  <div class="panel-header">
+    <h2>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+      <span>定时任务参数</span>
+    </h2>
+    <p class="panel-subtitle">配置每日邮件发送时间与基准时区</p>
+  </div>
+  <form method="post" action="/admin/settings" class="admin-create-user-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <div class="form-field">
+      <label for="digest_hour">
+        <span>每日汇总默认触发时间 <span class="required">*</span></span>
+      </label>
+      <select id="digest_hour" name="digest_hour">
+        {% for h in range(24) %}
+        <option value="{{ h }}" {% if digest_hour|int == h %}selected{% endif %}>{{ "%02d:00"|format(h) }} (每天 {{ "%02d:00"|format(h) }})</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-field">
+      <label for="digest_max_per_email">
+        <span>单封每日汇总最大条数上限</span>
+      </label>
+      <select id="digest_max_per_email" name="digest_max_per_email">
+        <option value="0" {% if digest_max_per_email|int == 0 %}selected{% endif %}>不限制 / 全部合并为 1 封邮件 (推荐)</option>
+        <option value="200" {% if digest_max_per_email|int == 200 %}selected{% endif %}>超过 200 条时自动拆封</option>
+        <option value="100" {% if digest_max_per_email|int == 100 %}selected{% endif %}>超过 100 条时自动拆封</option>
+        <option value="50" {% if digest_max_per_email|int == 50 %}selected{% endif %}>超过 50 条时自动拆封</option>
+      </select>
+    </div>
+    <div class="form-field">
+      <label for="app_timezone">
+        <span>系统基准时区 <span class="required">*</span></span>
+      </label>
+      <select id="app_timezone" name="app_timezone">
+        <optgroup label="常用（亚洲 / 大中华区）">
+          <option value="Asia/Shanghai" {% if app_timezone == 'Asia/Shanghai' %}selected{% endif %}>Asia/Shanghai (北京/上海时间 UTC+8)</option>
+          <option value="Asia/Hong_Kong" {% if app_timezone == 'Asia/Hong_Kong' %}selected{% endif %}>Asia/Hong_Kong (香港时间 UTC+8)</option>
+          <option value="Asia/Taipei" {% if app_timezone == 'Asia/Taipei' %}selected{% endif %}>Asia/Taipei (台北时间 UTC+8)</option>
+          <option value="Asia/Singapore" {% if app_timezone == 'Asia/Singapore' %}selected{% endif %}>Asia/Singapore (新加坡时间 UTC+8)</option>
+          <option value="Asia/Tokyo" {% if app_timezone == 'Asia/Tokyo' %}selected{% endif %}>Asia/Tokyo (东京时间 UTC+9)</option>
+          <option value="Asia/Seoul" {% if app_timezone == 'Asia/Seoul' %}selected{% endif %}>Asia/Seoul (首尔时间 UTC+9)</option>
+          <option value="Asia/Bangkok" {% if app_timezone == 'Asia/Bangkok' %}selected{% endif %}>Asia/Bangkok (曼谷/河内/雅加达 UTC+7)</option>
+          <option value="Asia/Dubai" {% if app_timezone == 'Asia/Dubai' %}selected{% endif %}>Asia/Dubai (迪拜时间 UTC+4)</option>
+        </optgroup>
+        <optgroup label="国际标准时间 / 欧洲">
+          <option value="UTC" {% if app_timezone == 'UTC' %}selected{% endif %}>UTC (世界协调时间 UTC+0)</option>
+          <option value="Europe/London" {% if app_timezone == 'Europe/London' %}selected{% endif %}>Europe/London (伦敦时间 UTC+0/+1)</option>
+          <option value="Europe/Paris" {% if app_timezone == 'Europe/Paris' %}selected{% endif %}>Europe/Paris (巴黎/柏林/罗马 UTC+1/+2)</option>
+          <option value="Europe/Moscow" {% if app_timezone == 'Europe/Moscow' %}selected{% endif %}>Europe/Moscow (莫斯科时间 UTC+3)</option>
+        </optgroup>
+        <optgroup label="美洲 / 澳洲">
+          <option value="America/New_York" {% if app_timezone == 'America/New_York' %}selected{% endif %}>America/New_York (美东时间 UTC-5/-4)</option>
+          <option value="America/Chicago" {% if app_timezone == 'America/Chicago' %}selected{% endif %}>America/Chicago (美中时间 UTC-6/-5)</option>
+          <option value="America/Los_Angeles" {% if app_timezone == 'America/Los_Angeles' %}selected{% endif %}>America/Los_Angeles (美西/太平洋时间 UTC-8/-7)</option>
+          <option value="Australia/Sydney" {% if app_timezone == 'Australia/Sydney' %}selected{% endif %}>Australia/Sydney (悉尼时间 UTC+10/+11)</option>
+        </optgroup>
+      </select>
+    </div>
+    <div class="form-field">
+      <label for="register_answer">
+        <span>注册邀请答案（群名问题）</span>
+      </label>
+      <input id="register_answer" type="text" name="register_answer" value="{{ register_answer }}" placeholder="注册页「群名」问题的正确答案，留空保持不变">
+    </div>
+    <div class="protocol-box" style="margin-bottom: 20px;">
+      <label class="check-card">
+        <input type="checkbox" name="wechat_ingest_enabled" {% if wechat_ingest_enabled %}checked{% endif %}>
+        <span class="check-label">
+          <strong>启用微信群接入（微信网关）</strong>
+          <small>默认关闭，当前未接入微信网关。开启后网关才能携带下方令牌调用 /api/wechat/ingest 推送群聊发言</small>
+        </span>
+      </label>
+    </div>
+    <div class="form-field">
+      <label for="wechat_ingest_token">
+        <span>微信接入安全令牌 {% if wechat_token_set %}<span style="color:#10b981;font-size:12px;">(已配置)</span>{% endif %}</span>
+      </label>
+      <input id="wechat_ingest_token" type="text" name="wechat_ingest_token" autocomplete="off" placeholder="{% if wechat_token_set %}•••••••••••••••• (留空保持原令牌不变){% else %}设置随机长令牌；微信群网关调用 /api/wechat/ingest 时需携带{% endif %}">
+    </div>
+    {% if wechat_token_set %}
+    <div class="form-field-action" style="margin-bottom: 12px;">
+      <button type="submit" name="action" value="clear_wechat_token" class="button danger secondary" onclick="return confirm('确定清除微信接入令牌？清除后接入接口将拒绝所有请求。');">
+        <span>清除微信接入令牌</span>
+      </button>
+    </div>
+    {% endif %}
+    <div class="form-field">
+      <label for="feishu_app_id">
+        <span>飞书自建应用 App ID（群消息图片直显，可选）</span>
+      </label>
+      <input id="feishu_app_id" type="text" name="feishu_app_id" value="{{ feishu_app_id }}" autocomplete="off" placeholder="例如 cli_a1b2c3d4；配置后群消息可直接显示图片">
+    </div>
+    <div class="form-field">
+      <label for="feishu_app_secret">
+        <span>飞书自建应用 App Secret {% if has_feishu_secret %}<span style="color:#10b981;font-size:12px;">(已配置加密落盘)</span>{% endif %}</span>
+      </label>
+      <input id="feishu_app_secret" type="password" name="feishu_app_secret" autocomplete="new-password" placeholder="{% if has_feishu_secret %}•••••••••••••••• (留空保持原Secret不变){% else %}粘贴自建应用的 App Secret{% endif %}">
+    </div>
+    <div class="form-field-action">
+      <button type="submit" class="button btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+        <span>保存设置</span>
+      </button>
+    </div>
+  </form>
+
+  <div class="hint-card" style="margin-top: 24px;">
+    <div class="hint-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"></path></svg>
+    </div>
+    <div class="hint-content">
+      <h4>说明与即时生效机制</h4>
+      <ul>
+        <li><strong>每日汇总触发时间</strong>：选择「每日夜间汇总」投递规则的订阅博主，系统将在该选定整点将当日产生的新动态打包为一封精简邮件统一投递。</li>
+        <li><strong>时区即时同步</strong>：修改系统时区后，所有抓取时间戳与每日汇总调度将立刻按照新时区进行计算，无需手动重启容器。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="panel" style="margin-top: 24px;">
+  <div class="panel-header">
+    <h2>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12A10 10 0 0 1 12 2z"></path><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>
+      <span>全局大模型 (AI 研报总结) 配置</span>
+    </h2>
+    <p class="panel-subtitle">配置系统级大模型 API 接口，用于在每日汇总邮件顶部自动生成 AI 观点速览</p>
+  </div>
+  <form method="post" action="/admin/settings" class="admin-create-user-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <input type="hidden" name="digest_hour" value="{{ digest_hour }}">
+    <input type="hidden" name="app_timezone" value="{{ app_timezone }}">
+    <input type="hidden" name="digest_max_per_email" value="{{ digest_max_per_email }}">
+    {% if wechat_ingest_enabled %}<input type="hidden" name="wechat_ingest_enabled" value="on">{% endif %}
+
+    <div class="protocol-box" style="margin-bottom: 20px;">
+      <label class="check-card">
+        <input type="checkbox" name="llm_enabled" {% if llm_enabled %}checked{% endif %}>
+        <span class="check-label">
+          <strong>启用全局大模型每日总结</strong>
+          <small>开启后，每日 23:00 汇总邮件将调用大模型生成【AI 今日智能速览】</small>
+        </span>
+      </label>
+    </div>
+
+    <div class="settings-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+      <div class="form-field" style="grid-column: span 2;">
+        <label for="llm_api_base">
+          <span>API 接口地址 (OpenAI 兼容) <span class="required">*</span></span>
+        </label>
+        <input id="llm_api_base" type="text" name="llm_api_base" value="{{ llm_api_base }}" placeholder="例如：https://aiapi.blueswords.com/v1">
+      </div>
+
+      <div class="form-field">
+        <label for="llm_model">
+          <span>默认模型名称 <span class="required">*</span></span>
+        </label>
+        <input id="llm_model" type="text" name="llm_model" value="{{ llm_model }}" placeholder="例如：gpt-5.6-luna 或 deepseek-chat">
+      </div>
+
+      <div class="form-field">
+        <label for="llm_api_key">
+          <span>API Key {% if has_llm_key %}<span style="color:#10b981;font-size:12px;">(已配置加密存储)</span>{% endif %}</span>
+        </label>
+        <input id="llm_api_key" type="password" name="llm_api_key" placeholder="{% if has_llm_key %}•••••••••••••••• (留空保持原Key不变){% else %}输入 sk-... API Key{% endif %}">
+      </div>
+
+      <div class="form-field" style="grid-column: span 2;">
+        <label for="llm_fallback_api_base">
+          <span>备用通道 API 地址（可选 · 主通道失败自动切换）</span>
+        </label>
+        <input id="llm_fallback_api_base" type="text" name="llm_fallback_api_base" value="{{ llm_fallback_api_base }}" placeholder="例如 https://api.deepseek.com/v1（OpenAI 兼容接口）">
+      </div>
+
+      <div class="form-field">
+        <label for="llm_fallback_model">
+          <span>备用通道模型</span>
+        </label>
+        <input id="llm_fallback_model" type="text" name="llm_fallback_model" value="{{ llm_fallback_model }}" placeholder="例如 deepseek-chat（留空沿用主通道模型名）">
+      </div>
+
+      <div class="form-field">
+        <label for="llm_fallback_api_key">
+          <span>备用通道 API Key {% if has_llm_fallback_key %}<span style="color:#10b981;font-size:12px;">(已配置加密存储)</span>{% endif %}</span>
+        </label>
+        <input id="llm_fallback_api_key" type="password" name="llm_fallback_api_key" placeholder="{% if has_llm_fallback_key %}•••••••••••••••• (留空保持不变){% else %}备用通道的 sk-... Key{% endif %}">
+      </div>
+    </div>
+
+    <div class="form-field-action">
+      <button type="submit" class="button btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+        <span>保存 AI 大模型设置</span>
+      </button>
+    </div>
+  </form>
+
+  <div class="hint-card" style="margin-top: 20px;">
+    <div class="hint-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+    </div>
+    <div class="hint-content">
+      <h4>智能缓存与安全保护</h4>
+      <ul>
+        <li><strong>智能去重缓存</strong>：当多个用户订阅了相同的博主时，系统自动复用已生成的 AI 研报，<strong>整批动态只会调用 1 次大模型</strong>，大幅节省 API 费用与耗时。</li>
+        <li><strong>密钥安全落盘</strong>：填写的 API Key 自动采用 <code>PBKDF2-HMAC-SHA256</code> 强加密存储，内存中仅在请求时临时解密，杜绝泄露风险。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

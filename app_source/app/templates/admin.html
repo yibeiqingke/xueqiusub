@@ -1,0 +1,283 @@
+{% extends "base.html" %}
+{% block title %}管理后台 · {{ app_name }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div class="page-title-group">
+    <h1>
+      <div class="header-icon-badge">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+      </div>
+      <span>系统管理后台</span>
+    </h1>
+    <p>管理全局用户、监控抓取源以及失败投递重试。</p>
+  </div>
+  <div style="display: flex; gap: 10px;">
+    <a class="button secondary" href="/admin/settings">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+      <span>运行设置</span>
+    </a>
+    <a class="button secondary" href="/">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"></path><polyline points="12 19 5 12 12 5"></polyline></svg>
+      <span>返回前台</span>
+    </a>
+  </div>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-info">
+      <span>注册总用户数</span>
+      <strong>{{ stats.users }}</strong>
+    </div>
+    <div class="stat-icon-wrapper" style="background: #eff6ff; color: #2563eb;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-info">
+      <span>活跃监控订阅</span>
+      <strong>{{ stats.subscriptions }}</strong>
+    </div>
+    <div class="stat-icon-wrapper" style="background: #ecfdf5; color: #059669;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-info">
+      <span>投递失败邮件</span>
+      <strong>{{ stats.failed }}</strong>
+    </div>
+    <div class="stat-icon-wrapper" style="background: #fef2f2; color: #dc2626;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+    </div>
+  </div>
+</div>
+
+<section class="panel">
+  <div class="panel-header">
+    <h2>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+      <span>快速创建用户</span>
+    </h2>
+    <p class="panel-subtitle">创建新用户并自动下发激活验证通知</p>
+  </div>
+  <form method="post" action="/admin/users" class="admin-create-user-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <div class="form-field">
+      <label for="admin_user_email">
+        <span>用户邮箱 <span class="required">*</span></span>
+      </label>
+      <input id="admin_user_email" type="email" name="email" placeholder="例如 user@example.com" required autocomplete="off">
+    </div>
+    <div class="form-field">
+      <label for="admin_user_password">
+        <span>初始密码 <span class="required">*</span></span>
+      </label>
+      <input id="admin_user_password" type="password" name="password" minlength="10" placeholder="至少 10 位初始密码" required>
+    </div>
+    <div class="form-field-check">
+      <label class="check">
+        <input type="checkbox" name="is_admin">
+        <span>设为管理员</span>
+      </label>
+    </div>
+    <div class="form-field-action">
+      <button type="submit" class="button btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        <span>创建并发送验证邮件</span>
+      </button>
+    </div>
+  </form>
+</section>
+
+<section class="panel">
+  <div class="panel-header">
+    <h2>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+      <span>用户管理列表</span>
+    </h2>
+    <p class="panel-subtitle">共 {{ users|length }} 名用户</p>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>登录邮箱 / 账号</th>
+          <th>邮箱验证</th>
+          <th>系统角色</th>
+          <th>账号状态</th>
+          <th style="text-align: right;">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for user in users %}
+        <tr>
+          <td><strong>{{ user.email }}</strong></td>
+          <td>
+            {% if user.email_verified %}
+            <span class="badge badge-success"><span class="status-dot"></span>已验证</span>
+            {% else %}
+            <span class="badge badge-neutral">待验证</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if user.is_admin %}
+            <span class="badge badge-blue">管理员</span>
+            {% else %}
+            <span class="badge badge-neutral">普通用户</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if user.is_enabled %}
+            <span class="badge badge-success">正常启用</span>
+            {% else %}
+            <span class="badge badge-danger">已停用</span>
+            {% endif %}
+          </td>
+          <td style="text-align: right;">
+            <div class="table-actions" style="justify-content: flex-end;">
+              {% if not user.email_verified %}
+              <form method="post" action="/admin/users/{{ user.id }}/verify-email" style="display:inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <button class="secondary" type="submit">重发验证</button>
+              </form>
+              {% endif %}
+              <form method="post" action="/admin/users/{{ user.id }}/toggle" style="display:inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <button class="secondary" type="submit">{{ '停用' if user.is_enabled else '启用' }}</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel-header">
+    <h2>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg>
+      <span>全网监控抓取源管理</span>
+    </h2>
+    <p class="panel-subtitle">底层爬取源状态与更新指标</p>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>博主信息</th>
+          <th>Feed 类型</th>
+          <th>活跃订阅数</th>
+          <th>最后抓取时间</th>
+          <th>最新动态条目</th>
+          <th>状态 / 异常计数</th>
+          <th>最后报错信息</th>
+          <th style="text-align: right;">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for account in accounts %}
+      {% set latest_item = latest_items_by_account.get(account.id) %}
+        <tr>
+          <td>
+            {% set p_map = {'xueqiu':'雪球','weibo':'微博','cls':'财联社','wallstreetcn':'见闻','gelonghui':'格隆汇','36kr':'36氪','jisilu':'集思录','custom_rss':'RSS'} %}
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span class="badge badge-neutral" style="font-size:11px;padding:2px 6px;">{{ p_map.get(account.platform, '雪球') }}</span>
+              <strong>{{ account.display_name }}</strong>
+            </div>
+            <small style="color: var(--text-muted); margin-top:2px; display:block; overflow:hidden; text-overflow:ellipsis; max-width:240px;">
+              {% if account.platform in ('cls','wallstreetcn','gelonghui','36kr','jisilu') %}
+              公共快讯源
+              {% else %}
+              ID: {{ account.xueqiu_user_id }}
+              {% endif %}
+            </small>
+          </td>
+          <td><span class="badge badge-neutral">{{ account.feed_type }}</span></td>
+          <td><span class="badge badge-blue">{{ account.subscriptions|selectattr('is_enabled')|list|length }} 人订阅</span></td>
+          <td><span style="font-size: 13px; color: var(--text-secondary);">{{ account.last_checked_at|local_datetime }}</span></td>
+          <td class="latest-item">
+            {% if latest_item %}
+              {% if latest_item.link %}
+              <a href="{{ latest_item.link }}" target="_blank" rel="noopener noreferrer">{{ latest_item.title }}</a>
+              {% else %}
+              <span>{{ latest_item.title }}</span>
+              {% endif %}
+              <small>{{ (latest_item.published_at or latest_item.created_at)|local_datetime }}</small>
+            {% else %}
+              <span style="color: var(--text-muted);">-</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if account.paused_until and account.paused_until > now %}
+            <span class="badge badge-danger">已暂停至 {{ account.paused_until|local_datetime }}</span>
+            {% elif account.failed_fetches > 0 %}
+            <span class="badge badge-danger">失败 {{ account.failed_fetches }} 次</span>
+            {% else %}
+            <span class="badge badge-success"><span class="status-dot"></span>正常</span>
+            {% endif %}
+          </td>
+          <td class="error-text">{{ account.last_error or '-' }}</td>
+          <td style="text-align: right; white-space: nowrap;">
+            <form method="post" action="/admin/accounts/{{ account.id }}/resume" style="display:inline; margin-right: 6px;">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+              <button class="button secondary small" type="submit" style="padding: 4px 10px; font-size: 12px; border-radius: 6px;" title="立即清除异常并强制触发一次抓取">立即抓取</button>
+            </form>
+            <form method="post" action="/admin/accounts/{{ account.id }}/delete" onsubmit="return confirm('确定删除该抓取源？将一并移除所有关联订阅与动态数据！')" style="display:inline;">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+              <button class="danger secondary small" type="submit" style="padding: 4px 8px; font-size: 12px; border-radius: 6px;">删除源</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel-header">
+    <h2>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+      <span>失败投递记录</span>
+    </h2>
+  </div>
+  {% if failed %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>接收用户</th>
+          <th>动态标题</th>
+          <th>重试次数</th>
+          <th>最后错误信息</th>
+          <th style="text-align: right;">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for delivery in failed %}
+        <tr>
+          <td><strong>{{ delivery.user.email }}</strong></td>
+          <td style="max-width: 260px;">{{ delivery.feed_item.title }}</td>
+          <td><span class="badge badge-danger">{{ delivery.attempts }} 次</span></td>
+          <td class="error-text">{{ delivery.last_error }}</td>
+          <td style="text-align: right;">
+            <form method="post" action="/admin/deliveries/{{ delivery.id }}/retry" style="display:inline;">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+              <button class="secondary" type="submit">立即重试</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state" style="padding: 24px;">
+    <p>🎉 暂无失败的投递邮件，所有动态推送均已成功发出。</p>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

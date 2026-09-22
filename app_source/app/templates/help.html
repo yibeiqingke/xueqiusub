@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{% block title %}使用说明与指南 · {{ app_name }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div class="page-title-group">
+    <h1>
+      <div class="header-icon-badge" style="background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%); color: #0284c7;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+      </div>
+      <span>使用说明与系统指南</span>
+    </h1>
+    <p>详细了解如何订阅全网多平台博主（雪球/微博/快讯/RSS）、配置 AI 智能投研与多渠道群推送。</p>
+  </div>
+</div>
+
+<!-- Section 1: Multi-Platform Subscriptions -->
+<section class="panel">
+  <div class="panel-header">
+    <h2>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><polyline points="16 11 18 13 22 9"></polyline></svg>
+      <span>一、如何订阅全网多平台博主与快讯源</span>
+    </h2>
+    <span class="badge badge-neutral">支持 7+ 财经平台</span>
+  </div>
+  
+  <div class="guide-list">
+    <div class="guide-item">
+      <div class="guide-num">❄️</div>
+      <div class="guide-body">
+        <strong>雪球博主订阅</strong>
+        <p>在浏览器中打开博主的雪球主页，地址栏中的纯数字即为其雪球 UID。例如：</p>
+        <p style="margin-top: 6px;"><code>https://xueqiu.com/u/3058599833</code> ➜ 提取 UID <code>3058599833</code></p>
+      </div>
+    </div>
+
+    <div class="guide-item">
+      <div class="guide-num">🔴</div>
+      <div class="guide-body">
+        <strong>微博财经大V订阅</strong>
+        <p>在平台下拉框选择「微博财经博主」，打开博主的微博主页，提取地址栏中的博主 UID（如任泽平、洪灏、但斌等）：</p>
+        <p style="margin-top: 6px;"><code>https://weibo.com/u/1111681197</code> ➜ 提取 UID <code>1111681197</code></p>
+      </div>
+    </div>
+
+    <div class="guide-item">
+      <div class="guide-num">⚡</div>
+      <div class="guide-body">
+        <strong>公共快讯频道 (免填 ID，下拉一键订阅)</strong>
+        <p>支持 <strong>华尔街见闻全球快讯</strong>、<strong>财联社 7×24 快讯</strong>、<strong>格隆汇 7×24 财经</strong>、<strong>36氪实时快讯</strong> 与 <strong>集思录精选广场</strong>。在平台下拉框选择对应频道，点击添加即可一键订阅，无需手动输入 ID。</p>
+      </div>
+    </div>
+
+    <div class="guide-item">
+      <div class="guide-num">🌐</div>
+      <div class="guide-body">
+        <strong>自定义公开 RSS / 公众号源</strong>
+        <p>选择「自定义 RSS / 公众号源」，粘贴任意公开的 RSS 订阅链接（如券商策略专栏、瓦斯阅读微信公众号 RSS、Substack 研报等），系统即可自动监控抓取。</p>
+      </div>
+    </div>
+
+    <div class="guide-item">
+      <div class="guide-num">💡</div>
+      <div class="guide-body">
+        <strong>首次抓取基线保护</strong>
+        <p>新添加的订阅在首次抓取时会自动建立<strong>基线标记</strong>，不会将博主历史发布的大量旧动态重复推送给您；只有添加之后新发布的动态才会触发邮件与群推送。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 2: AI Investment Intelligence -->
+<section class="panel">
+  <div class="panel-header">
+    <h2>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+      <span>二、AI 智能投研矩阵与专属知识库问答</span>
+    </h2>
+    <span class="badge badge-neutral">调仓雷达 + 情绪量化 + RAG 对话</span>
+  </div>
+
+  <div class="guide-list">
+    <div class="guide-item">
+      <div class="guide-num">1</div>
+      <div class="guide-body">
+        <strong>🎯 大V调仓变动雷达与 📊 多空情绪晴雨表</strong>
+        <p>系统每天夜间 23:00 汇总全天动态时，会自动调用大模型梳理出：</p>
+        <ul>
+          <li><strong>调仓变动雷达</strong>：自动识别博主买入、加仓、减仓、止盈、清仓动作并结构化标注；</li>
+          <li><strong>多空情绪晴雨表</strong>：量化统计关注大V的看多/看空比例与综合市场温度；</li>
+          <li><strong>博主独立开关</strong>：您可以在首页列表中自由勾选某位博主是否纳入 AI 总结。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="guide-item">
+      <div class="guide-num">2</div>
+      <div class="guide-body">
+        <strong>🧠 专属大V知识库智能投研问答 (RAG)</strong>
+        <p>访问顶部导航栏的「<a href="/chat"><strong>AI 投研问答</strong></a>」，您可以向 AI 提问任何关于博主历史观点的问题（如：<em>“老木匠最近对长端美债和大盘的态度变化？”</em>、<em>“汇总中国中车的历史评语与调仓”</em>）。系统将基于真实发帖建立事实检索库（RAG），生成专业买方研报并附带原帖出处链接。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 3: Notification Channels -->
+<section class="panel">
+  <div class="panel-header">
+    <h2>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+      <span>三、多渠道推送通道与群机器人设置</span>
+    </h2>
+  </div>
+  <p style="color: var(--text-secondary); margin-bottom: 16px;">系统支持邮件、飞书、钉钉、企业微信等多渠道协同推送，前往「<a href="/settings">推送设置</a>」即可配置：</p>
+
+  <div class="guide-list">
+    <div class="guide-item">
+      <div class="guide-num">📧</div>
+      <div class="guide-body">
+        <strong>邮箱通道 (公共发信 或 专属 SMTP)</strong>
+        <p>默认使用系统公共发信通道。如果您希望邮件发件人显示为自己的邮箱（如 QQ、163、企业邮箱），可在设置页输入邮箱授权码配置专属 SMTP 通道。</p>
+      </div>
+    </div>
+
+    <div class="guide-item">
+      <div class="guide-num">💬</div>
+      <div class="guide-body">
+        <strong>飞书 / 钉钉 / 企业微信 群机器人 Webhook</strong>
+        <p>在炒股交流群或团队群中添加自定义群机器人，将生成的 Webhook 链接填入设置页：</p>
+        <ul>
+          <li><strong>实时同步</strong>：博主一发帖，即刻以富文本卡片同步到群；</li>
+          <li><strong>夜间汇总</strong>：每天 23:00 自动将包含 AI 调仓雷达的投研内参卡片推送到群聊。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 4: FAQ -->
+<section class="panel">
+  <div class="panel-header">
+    <h2>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+      <span>四、常见问题排查 (FAQ)</span>
+    </h2>
+  </div>
+  <div class="guide-list">
+    <div class="guide-item">
+      <div class="guide-body">
+        <strong>1. 为什么没有收到新动态邮件？</strong>
+        <p>• 请先检查您的邮箱垃圾箱或订阅邮件标签栏；<br>
+           • 新添加的博主首次抓取仅建立基线，只有添加之后<strong>新产生</strong>的发帖才会触发推送；<br>
+           • 若博主主页较长时间未发帖，系统会处于静默监听状态，发帖后即刻推送。</p>
+      </div>
+    </div>
+
+    <div class="guide-item">
+      <div class="guide-body">
+        <strong>2. 如何调整单封邮件合并或拆分？</strong>
+        <p>系统默认采用<strong>不拆分模式</strong>（全天所有动态统一合并在 1 封邮件中完整呈现）。如需调整，管理员可在后台「运行设置」中修改拆分阈值。</p>
+      </div>
+    </div>
+
+    <div class="guide-item">
+      <div class="guide-body">
+        <strong>3. 如何暂停接收或删除订阅？</strong>
+        <p>在首页订阅列表中将对应博主的「启用」开关取消勾选并保存即可暂停接收；点击「删除」按钮可永久移除该博主。</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
