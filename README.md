@@ -78,7 +78,7 @@
 
 ### 1. 克隆代码仓库
 ```bash
-git clone https://github.com/<your-username>/xueqiusub.git
+git clone https://github.com/yibeiqingke/xueqiusub.git
 cd xueqiusub
 ```
 
